@@ -1,5 +1,5 @@
 import { HomeGamelist } from "@/components/home";
-import SearchInput from "@/components/search";
+import SearchInput from "@/components/Search";
 import { homeData } from "@/app/(app)/(home)/lib/homeData";
 import {
   dehydrate,

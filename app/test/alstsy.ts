@@ -6,7 +6,7 @@ export const GET = async () => {
     .select(["name"]) // 只选 name 字段
     .execute();
 
-  const results: { vid?: string; other?: string }[] = [];
+  const results: { vid?: string; other?: string; id: string }[] = [];
 
   // 正则表达式匹配 vndb、other 的 ID
   const idPattern = /\[(vndb-(v\d+)|other-(\w+))\]/g;
@@ -23,12 +23,24 @@ export const GET = async () => {
 
     // 只收集至少有一个字段的项
     if (Object.keys(record).length > 0) {
-      results.push(record);
+      // 拼接 id 字段
+      let id = "";
+      if (record.vid && record.other) {
+        id = `${record.vid}-${record.other}`;
+      } else if (record.vid) {
+        id = record.vid;
+      } else if (record.other) {
+        id = record.other;
+      }
+      results.push({ ...record, id });
     }
   }
 
   // 使用 Map 根据 vid 去重（优先保留第一个出现的）
-  const dedupedMap = new Map<string, { vid?: string; other?: string }>();
+  const dedupedMap = new Map<
+    string,
+    { vid?: string; other?: string; id: string }
+  >();
   for (const item of results) {
     const key = item.vid || crypto.randomUUID(); // 没有 vid 时使用 UUID 防止被覆盖
     if (!dedupedMap.has(key)) {

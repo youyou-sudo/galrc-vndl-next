@@ -1,9 +1,18 @@
 import { Queue } from "bullmq";
-import { redisConfig } from "@/lib/redis/redis";
+import { getRedisClient } from "@/lib/redis/redis";
 
-export const Queuef = new Queue("myQueue", {
-  connection: redisConfig,
-});
+let Queuef: Queue | undefined;
+const redis = getRedisClient();
+
+export function getQueuefClient(): Queue {
+  if (!Queuef) {
+    Queuef = new Queue("myQueue", {
+      connection: redis,
+    });
+  }
+
+  return Queuef;
+}
 
 // async function getAllJobs() {
 //   const waiting = await Queuef.getWaiting();

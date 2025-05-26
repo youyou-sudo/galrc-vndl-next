@@ -80,3 +80,7 @@ export const workerDataPull = async () => {
     })
   );
 };
+
+export async function fakeHeavyTask(durationMs: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, durationMs));
+}
