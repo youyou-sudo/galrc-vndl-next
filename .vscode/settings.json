@@ -1,3 +1,11 @@
 {
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "cSpell.words": [
+    "bprogress",
+    "bullmq",
+    "galrc",
+    "kysely",
+    "turbopack",
+    "vndl"
+  ],
 }

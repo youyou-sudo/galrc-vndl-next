@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "dev:webpack": "next dev",
-    "build": "next build --turbopack && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && cp -r scripts .next/standalone/",
-    "build:webpack": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && cp -r scripts .next/standalone/",
+    "build": "next build --turbopack && bun scripts/buildFileCopy.ts",
+    "build:webpack": "next build && bun scripts/buildFileCopy.ts",
     "start": "next start",
     "lint": "next lint"
   },
