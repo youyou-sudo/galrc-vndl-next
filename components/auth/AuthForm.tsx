@@ -9,7 +9,7 @@ import {
   TabsContents,
 } from "@/components/animate-ui/radix/tabs";
 
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon,AlertCircle, Loader2 } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/form";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { AlertCircle, Loader2 } from "lucide-react";
 
 import { useRouter } from "@bprogress/next/app";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

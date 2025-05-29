@@ -7,14 +7,14 @@ interface NodeStatusBadgeProps {
 export function NodeStatusBadge({ status }: NodeStatusBadgeProps) {
   const statusConfig = {
     true: {
-      label: "健康",
+      label: "在线",
       variant: "default" as const,
       className: "bg-green-500 hover:bg-green-600",
     },
     false: {
       label: "离线",
       variant: "outline" as const,
-      className: "bg-gray-500 hover:bg-gray-600 text-white",
+      className: "bg-gray-500 hover:bg-red-600 text-white",
     },
   };
 

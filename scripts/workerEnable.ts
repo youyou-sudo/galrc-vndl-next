@@ -1,5 +1,5 @@
 import { Worker } from "bullmq";
-import { fakeHeavyTask } from "@/lib/queue/workers/CloudFlare/workerDataPull";
+import { fakeHeavyTask } from "@/lib/task/workerDataPull";
 import { redisConfig } from "@/lib/redis";
 
 let workerInstance: Worker | undefined;

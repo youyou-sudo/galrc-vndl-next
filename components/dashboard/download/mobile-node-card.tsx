@@ -28,12 +28,14 @@ import { useState } from "react";
 export type WorkerData = Awaited<ReturnType<typeof workerDataGet>>;
 type WorkerDataSingle = WorkerData extends Array<infer U> ? U : WorkerData;
 
+import { Progress } from "@/components/animate-ui/radix/progress";
+
 export function MobileNodeCard({
   node,
-  refetch,
+  refetchAction,
 }: {
   node: WorkerDataSingle;
-  refetch: () => void;
+  refetchAction: () => void;
 }) {
   const [switchLoading, setSwitchLoading] = useState(false);
   return (
@@ -57,8 +59,7 @@ export function MobileNodeCard({
                   <Edit className="mr-2 h-4 w-4" />
                   编辑
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                </DropdownMenuItem>
+                <DropdownMenuItem></DropdownMenuItem>
                 <DropdownMenuItem className="text-red-600">
                   <Trash2 className="mr-2 h-4 w-4" />
                   删除
@@ -70,6 +71,15 @@ export function MobileNodeCard({
         <div className="text-xs text-muted-foreground">{node.url_endpoint}</div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex justify-between text-xs">
+            <span>额度</span>
+            <span>{Math.round((node.requests / 100000) * 100)}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <Progress value={Math.round((node.requests / 100000) * 100)} />
+          </div>
+        </div>
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="space-y-1">
@@ -108,7 +118,7 @@ export function MobileNodeCard({
             onClick={async () => {
               await setSwitchLoading(true);
               await nodeEnaledAc(node.id, !node.enable);
-              await refetch();
+              await refetchAction();
               await new Promise((resolve) => setTimeout(resolve, 500));
               await setSwitchLoading(false);
             }}

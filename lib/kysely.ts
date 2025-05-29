@@ -277,6 +277,11 @@ export interface OtherDataTable {
   description: string | null; // 可为空
 }
 
+export interface SiteConfigTable {
+  key: string;
+  config: ColumnType<Record<string, any>, string, string>;
+}
+
 export interface CloudflareConfigTable {
   id: Generated<number>;
   a_email: string;
@@ -306,6 +311,7 @@ export interface Database {
   galrc_storages: AlistStorages;
   galrc_other: OtherDataTable;
   galrc_cloudflare: CloudflareConfigTable;
+  galrc_siteConfig: SiteConfigTable;
 
   // Alist 部分
   galrc_search_nodes: AlsitSearchNodes;

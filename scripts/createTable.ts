@@ -132,6 +132,13 @@ export async function seed() {
     .execute();
 
   await db.schema
+    .createTable("galrc_siteConfig")
+    .ifNotExists()
+    .addColumn("key", "varchar(255)", (col) => col.primaryKey())
+    .addColumn(" config", "jsonb")
+    .execute();
+
+  await db.schema
     .createTable("galrc_alistb")
     .ifNotExists()
     .addColumn("id", "varchar(512)", (cb) => cb.notNull().primaryKey())
@@ -157,6 +164,12 @@ export async function seed() {
     .ifNotExists()
     .on("galrc_session")
     .columns(["userId", "token"])
+    .execute();
+  await db.schema
+    .createIndex("galrc_siteConfig_key_index")
+    .ifNotExists()
+    .on("galrc_siteConfig")
+    .column("key")
     .execute();
 }
 

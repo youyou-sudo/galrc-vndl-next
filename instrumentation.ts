@@ -4,5 +4,8 @@ import { connection } from "next/server";
 // 新的 Next.js 服务器实例启动时，该函数将被调用一次。
 export async function register() {
   connection();
-  await import("@/scripts/workerEnable");
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    const { workerDataCorn } = await import("./lib/task/workerDataPull");
+    workerDataCorn();
+  }
 }

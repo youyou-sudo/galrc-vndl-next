@@ -4,25 +4,46 @@ import { getImageUrl } from "@/lib/ImageUrl";
 import { Link } from "next-view-transitions";
 import { useInView } from "react-intersection-observer";
 import { GameCard } from "@/components/game-card";
-import { useGameListStore } from "@/stores/gameListStore";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { homeData } from "@/app/(app)/(home)/lib/homeData";
 
 const HomeGamelistComponent = () => {
-  const { pages, fetchNext, loading } = useGameListStore();
+  const {
+    data: gameListData,
+    isLoading,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["gamelist"],
+    queryFn: async ({ pageParam = 0 }) => {
+      return await homeData(20, pageParam);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage: {
+      currentPage: number;
+      totalPages: number;
+    }) => {
+      return lastPage.currentPage < lastPage.totalPages
+        ? lastPage.currentPage + 1
+        : null;
+    },
+  });
   const { ref, inView } = useInView({ threshold: 0 });
 
   useEffect(() => {
-    if (pages.length === 0) {
-      fetchNext();
+    if (gameListData?.pages.length === 0) {
+      refetch();
     }
-  }, [fetchNext, pages.length]);
+  }, [refetch, gameListData?.pages.length]);
 
   useEffect(() => {
-    if (inView && !loading) {
-      fetchNext();
+    if (inView && !isLoading) {
+      fetchNextPage();
     }
-  }, [inView, loading, fetchNext]);
+  }, [inView, isLoading, fetchNextPage]);
 
-  const gameList = pages.flatMap((page) =>
+  const gameList = gameListData?.pages.flatMap((page) =>
     page.items.map((item) => (
       <Link href={`/${item.id}`} scroll={true} key={item.id}>
         <div className="space-y-2 aspect-[2/3] p-0">
@@ -42,16 +63,10 @@ const HomeGamelistComponent = () => {
       </Link>
     ))
   );
-
-  const currentPage =
-    pages.length > 0 ? pages[pages.length - 1].currentPage : 0;
-  const totalPages = pages.length > 0 ? pages[pages.length - 1].totalPages : 1;
-  const isLastPage = currentPage >= totalPages - 1;
-
   return (
     <div className="grid grid-cols-3 gap-4 md:grid-cols-6">
       {gameList}
-      {!isLastPage && (
+      {hasNextPage && (
         <>
           <GameCard.ListSkeleton ref={ref} />
           <GameCard.ListSkeleton />

@@ -1,10 +1,13 @@
-import { Queuef } from "@/lib/queue/queue";
+import { getQueuefClient } from "@/lib/queue/queue";
 
-await Queuef.add(
-  "workerDataPull",
-  { info: "信息" },
-  {
-    repeat: { pattern: "* * * * *" },
-    jobId: "repeat-every-minute",
-  }
+const Queuef = await getQueuefClient();
+
+const jobs = await Queuef.getJobs(
+  ["waiting", "active", "completed", "failed", "delayed"],
+  0,
+  50
 );
+
+console.log(jobs);
+
+await Queuef.close(); // 添加这一行！

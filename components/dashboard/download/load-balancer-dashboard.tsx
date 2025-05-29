@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +37,7 @@ import { useQuery } from "@tanstack/react-query";
 import { workerDataGet } from "@/lib/dashboard/download/Cloudflare/workerDataPull";
 import { formatBytes } from "@/lib/formatBytes";
 import { nodeEnaledAc } from "@/lib/dashboard/download/nodeEnabledAc";
+import { Progress } from "@/components/animate-ui/radix/progress";
 
 export interface MobileStatsGridProps {
   title: string;
@@ -56,6 +56,7 @@ export default function LoadBalancerDashboard() {
       const res = await workerDataGet();
       return res;
     },
+    refetchInterval: 60000,
   });
 
   // 检测屏幕尺寸
@@ -130,7 +131,7 @@ export default function LoadBalancerDashboard() {
           </div>
         ) : (
           /* Desktop Header */
-          <div className="flex items-center justify-between p-6">
+          <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold">下载节点管理</h1>
               <p className="mt-1 opacity-50">
@@ -184,7 +185,11 @@ export default function LoadBalancerDashboard() {
               /* Mobile Node Cards */
               <div className="space-y-3">
                 {workersItems?.map((node) => (
-                  <MobileNodeCard key={node.id} node={node} refetch={refetch} />
+                  <MobileNodeCard
+                    key={node.id}
+                    node={node}
+                    refetchAction={refetch}
+                  />
                 ))}
               </div>
             ) : (
@@ -196,10 +201,10 @@ export default function LoadBalancerDashboard() {
                       <TableRow>
                         <TableHead>节点名称</TableHead>
                         <TableHead>地址</TableHead>
-                        <TableHead>状态</TableHead>
-                        <TableHead>请求总数</TableHead>
+                        <TableHead className="text-center">请求总数</TableHead>
                         <TableHead>错误</TableHead>
                         <TableHead>流量</TableHead>
+                        <TableHead>状态</TableHead>
                         <TableHead>启用</TableHead>
                         <TableHead>操作</TableHead>
                       </TableRow>
@@ -211,13 +216,18 @@ export default function LoadBalancerDashboard() {
                             {node.woker_name}
                           </TableCell>
                           <TableCell>{node.url_endpoint}</TableCell>
-                          <TableCell>
-                            <NodeStatusBadge status={node.state} />
+                          <TableCell className="text-center">
+                            {node.requests}
+                            <Progress
+                              value={Math.round((node.requests / 100000) * 100)}
+                            />
                           </TableCell>
-                          <TableCell>{node.requests}</TableCell>
                           <TableCell>{node.errors}</TableCell>
                           <TableCell>
                             {formatBytes(node.responseBodySize)}
+                          </TableCell>
+                          <TableCell>
+                            <NodeStatusBadge status={node.state} />
                           </TableCell>
                           <TableCell className="flex items-center flex-row">
                             <Switch

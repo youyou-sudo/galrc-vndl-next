@@ -1,4 +1,4 @@
-import LoadBalancerDashboard from "@/components/dashboard/sedebar/download/load-balancer-dashboard";
+import LoadBalancerDashboard from "@/components/dashboard/download/load-balancer-dashboard";
 import {
   dehydrate,
   HydrationBoundary,

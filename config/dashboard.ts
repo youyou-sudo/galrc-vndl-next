@@ -2,8 +2,6 @@ import {
   Bot,
   Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
   SquareTerminal,
 } from "lucide-react";
 
@@ -23,6 +21,10 @@ export const dashboardConfig = {
       isActive: true,
       items: [
         {
+          title: "站点配置",
+          url: "/dashboard/config",
+        },
+        {
           title: "补充数据",
           url: "/dashboard/other",
         },
@@ -37,10 +39,6 @@ export const dashboardConfig = {
           title: "下载管理",
           url: "/dashboard/download",
         },
-        {
-          title: "任务管理",
-          url: "/dashboard/task",
-        },
       ],
     },
   ],
@@ -49,16 +47,6 @@ export const dashboardConfig = {
       name: "Design Engineering",
       url: "#",
       icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
   user: {

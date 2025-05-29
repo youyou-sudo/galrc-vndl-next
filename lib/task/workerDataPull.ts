@@ -1,9 +1,8 @@
 "use server";
 import { db } from "@/lib/kysely";
 
-export const workerDataPull = async () => {
+const workerDataPull = async () => {
   const data = await db.selectFrom("galrc_cloudflare").selectAll().execute();
-
   await Promise.all(
     data.map(async (item) => {
       try {
@@ -70,6 +69,7 @@ export const workerDataPull = async () => {
             responseBodySize: result.responseBodySize?.toString() ?? "0",
             subrequests: result.subrequests?.toString() ?? "0",
             url_endpoint: url,
+            state: result.requests?.toString() < 100000,
             updateTime: new Date(),
           })
           .where("id", "=", item.id)
@@ -81,6 +81,12 @@ export const workerDataPull = async () => {
   );
 };
 
-export async function fakeHeavyTask(durationMs: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, durationMs));
+export async function workerDataCorn() {
+  try {
+    await workerDataPull();
+  } catch (err) {
+    console.error("workerDataPull 任务失败", err);
+  }
+
+  setTimeout(workerDataCorn, 240 * 1000);
 }
